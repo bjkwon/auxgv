@@ -21,7 +21,7 @@ BOOL CALLBACK auxDlg (HWND hDlg, UINT umsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (umsg)
 	{
-	chHANDLE_DLGMSG (hDlg, WM_INITDIALOG, wnd.OnInitDialog);
+	chHANDLE_DLGMSG (hDlg, WM_INITDIALOG, auxMain.OnInitDialog);
 	chHANDLE_DLGMSG (hDlg, WM_SIZE, auxMain.OnSize);
 	chHANDLE_DLGMSG (hDlg, WM_CLOSE, auxMain.OnClose);
 	chHANDLE_DLGMSG (hDlg, WM_DESTROY, auxMain.OnDestroy);
@@ -57,7 +57,6 @@ int  WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,
 #endif
 	auxMain.hDlg = wnd.hDlg ;
 	strcpy(auxMain.AppPath, wnd.AppPath);
-	auxMain.OnInitDialog(NULL, NULL);
 	ShowWindow(auxMain.hDlg, iCmdShow);
 	UpdateWindow (auxMain.hDlg);
 	hAccel = LoadAccelerators (auxMain.hInst, MAKEINTRESOURCE(IDR_ACCELERATOR1));

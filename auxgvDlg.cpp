@@ -29,7 +29,9 @@ CAuxDlg::~CAuxDlg(void)
 
 BOOL CAuxDlg::OnInitDialog(HWND hwndFocus, LPARAM lParam)
 {
-	char errstr[256], buf[256];
+	CWndDlg::OnInitDialog(hwndFocus, lParam);
+
+	char errstr[256], iniFile[512], buf[256];
 	string readstr, temp;
 	temp = AppPath;
 	hPlotButton = GetDlgItem(IDC_MAKE_PLOT);
@@ -37,8 +39,11 @@ BOOL CAuxDlg::OnInitDialog(HWND hwndFocus, LPARAM lParam)
 	GetModuleFileName(hInst, buf, sizeof(buf));
 	getVersionStringAndUpdateTitle (hDlg, buf, VerStr,sizeof(VerStr));
 
-	sprintf(buf, "%s%s", AppPath, INIFILE);
-	readINI(buf, errstr);
+
+	DWORD dw = sizeof(buf);
+	GetComputerName(buf, &dw);
+	sprintf (iniFile, "%s%s.%s.ini", AppPath, AppName, buf);
+	readINI(iniFile, errstr);
 
     HDC hdc = GetDC(NULL);
 	LONG lfHeight = MulDiv(fontsize, GetDeviceCaps(hdc, LOGPIXELSY), 72);
@@ -79,11 +84,14 @@ void CAuxDlg::OnClose()
 
 void CAuxDlg::OnDestroy()
 {
-	char errstr[256], buf[256], msg[256];
+	char iniFile[256], errstr[256], buf[256], msg[256];
 	DeleteObject (eFont);
 	DeleteObject (hEditBrush);
-	sprintf(buf, "%s%s", AppPath, INIFILE);
-	if(!writeINI(buf, errstr))
+
+	DWORD dw = sizeof(buf);
+	GetComputerName(buf, &dw);
+	sprintf (iniFile, "%s%s.%s.ini", AppPath, AppName, buf);
+	if(!writeINI(iniFile, errstr))
 	{
 		sprintf(msg, "Exiting.... %s (%s)", errstr, buf);
 		MessageBox(msg);
